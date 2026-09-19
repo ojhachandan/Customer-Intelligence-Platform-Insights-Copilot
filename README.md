@@ -1,49 +1,11 @@
 # Customer Intelligence Platform + Insights Copilot
 
-Runnable, API-first MVP for order ingestion, customer segmentation, hybrid recommendations, semantic customer discovery, and grounded analytics answers.
+The Customer Intelligence Platform is an end-to-end analytics system that turns raw e-commerce order data into customer segments, personalized recommendations, and a natural-language analytics assistant — built to demonstrate production engineering practices rather than a notebook exercise.
 
-## Start locally
+The pipeline ingests order-line data through an idempotent, schema-validated loader, computes versioned RFM and behavioral feature snapshots, and trains K-Means segmentation models (benchmarked against a Gaussian Mixture baseline) with full experiment tracking in MLflow. A hybrid recommendation engine blends implicit ALS collaborative filtering with content-based similarity, with cold-start fallbacks and Redis-backed caching for low-latency serving.
 
-```sh
-cp .env.example .env
-docker compose up --build -d
-docker compose exec api cip ingest data/orders.csv
-docker compose exec api cip features
-docker compose exec api cip train
-docker compose exec api cip recommend
-docker compose exec api cip embed
-docker compose exec api cip reports reports
-```
+At the center of the system is the Insights Copilot — a LangGraph-orchestrated agent that answers natural-language business questions by calling live tools against the feature store, time-series warehouse data, and a Qdrant vector store of customer behavioral embeddings. Every numeric claim the Copilot makes is grounded and cited to its originating tool call or source report; when a question can't be answered from available data, it states that limitation explicitly rather than fabricating a number. Every request — prompt, tool arguments, sources, response, latency, and model metadata — is persisted to an audit log for full traceability.
 
-Pull the default local Copilot model once Ollama is healthy:
+The system runs entirely through Docker Compose (Postgres, Redis, Qdrant, MLflow, API, scheduler) and defaults to a local Ollama model, so it's fully reproducible with zero external API costs, while remaining provider-agnostic for hosted LLMs. Population stability index (PSI) drift reporting tracks segment stability across pipeline runs, and the API is fully documented via FastAPI's OpenAPI interface.
 
-```sh
-docker compose exec ollama ollama pull llama3.2:3b
-```
-
-Open `http://localhost:8000/docs` for the generated API documentation. The `scheduler` container runs the same jobs daily; set `CIP_SCHEDULE_SECONDS` for a shorter development cadence.
-
-For a local Python environment instead of Docker, install `pip install -e '.[dev]'`, then run `cip init` followed by the pipeline commands below. Execute `pytest` to run the unit and integration-style service tests.
-
-## API examples
-
-```sh
-curl http://localhost:8000/segment/c-001
-curl http://localhost:8000/recommend/c-001
-curl -X POST http://localhost:8000/copilot/ask -H 'content-type: application/json' \
-  -d '{"question":"What is the 90 day revenue trend for segment 0?"}'
-```
-
-`/copilot/ask` returns structured citations alongside answer text. Numeric answers are generated only from a live tool call and are persisted with their input arguments in `copilot_audit_logs`.
-
-## Pipeline commands
-
-`cip init`, `cip ingest data/orders.csv`, `cip features`, `cip train`, `cip recommend`, `cip embed`, `cip reports reports`, and `cip drift` can be run independently. `train` records K-Means silhouette/elbow artifacts and its GMM baseline in the database and MLflow when `CIP_MLFLOW_TRACKING_URI` is configured.
-
-Run `cip migrate` before a production deployment to apply the included Alembic schema migration. The API's `init` command is retained for frictionless local setup.
-
-The recommendation engine uses implicit ALS and falls back to deterministic implicit-feedback co-occurrence if model fitting is unavailable. Customer profile vectors use a deterministic tabular hash embedding, making the local MVP self-contained while retaining Qdrant-compatible vector storage.
-
-## Configuration and scope
-
-All configuration uses the `CIP_` environment prefix; see `.env.example`. Endpoints are intentionally unauthenticated for local single-tenant use. Add API authentication through FastAPI dependencies before exposing the service outside a trusted environment.
+This project was deliberately engineered around the failure modes that matter in production ML systems: data validation at ingestion, model versioning and comparison, cache invalidation, grounded rather than hallucinated agent outputs, and full auditability of every AI-generated claim.
