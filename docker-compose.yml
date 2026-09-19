@@ -1,0 +1,45 @@
+services:
+  api:
+    build: .
+    environment:
+      CIP_DATABASE_URL: postgresql+psycopg://cip:cip@postgres:5432/cip
+      CIP_REDIS_URL: redis://redis:6379/0
+      CIP_QDRANT_URL: http://qdrant:6333
+      CIP_MLFLOW_TRACKING_URI: http://mlflow:5000
+      CIP_OLLAMA_BASE_URL: http://ollama:11434
+    ports: ["8000:8000"]
+    depends_on: [postgres, redis, qdrant, mlflow]
+  scheduler:
+    build: .
+    command: ["/app/scripts/schedule.sh"]
+    environment:
+      CIP_DATABASE_URL: postgresql+psycopg://cip:cip@postgres:5432/cip
+      CIP_REDIS_URL: redis://redis:6379/0
+      CIP_QDRANT_URL: http://qdrant:6333
+      CIP_MLFLOW_TRACKING_URI: http://mlflow:5000
+    depends_on: [postgres, redis, qdrant]
+  postgres:
+    image: postgres:16-alpine
+    environment: { POSTGRES_DB: cip, POSTGRES_USER: cip, POSTGRES_PASSWORD: cip }
+    ports: ["5432:5432"]
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+  qdrant:
+    image: qdrant/qdrant:v1.11.3
+    ports: ["6333:6333"]
+    volumes: ["qdrant_data:/qdrant/storage"]
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.16.2
+    command: ["mlflow", "server", "--host", "0.0.0.0", "--port", "5000"]
+    ports: ["5000:5000"]
+  ollama:
+    image: ollama/ollama:latest
+    ports: ["11434:11434"]
+    volumes: ["ollama_data:/root/.ollama"]
+volumes:
+  postgres_data:
+  qdrant_data:
+  ollama_data:
+

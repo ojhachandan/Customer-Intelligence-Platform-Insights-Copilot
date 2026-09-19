@@ -1,0 +1,17 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.db
+*.sqlite
+*.sqlite3
+.DS_Store
+compose-check.txt
+cd.accidental
+git.accidental
