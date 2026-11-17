@@ -22,7 +22,7 @@ SECRET_PATTERNS = [
 SAFE_PLACEHOLDERS = [
     "your_api_key", "your-api-key", "placeholder", "replace_with", "replace-with",
     "example", "<api_key>", "ci/cd", "dummy", "test", "postgres:5432", "sqlite://",
-    "cip:cip@postgres", "cip:cip@localhost" # standard local docker-compose default credentials
+    "cip:cip@postgres", "cip:cip@localhost", "your_postgres", "your_database",
 ]
 
 EXCLUDE_DIRS = {
@@ -44,7 +44,7 @@ def scan_working_tree(root_dir: str = ".") -> list[dict]:
                 continue
             filepath = os.path.join(dirpath, f)
             relpath = os.path.relpath(filepath, root_dir)
-            if relpath.startswith(".git") or relpath.startswith("scratch"):
+            if relpath.startswith((".git", "scratch")):
                 continue
             try:
                 with open(filepath, "r", encoding="utf-8", errors="ignore") as fp:
@@ -64,7 +64,7 @@ def scan_working_tree(root_dir: str = ".") -> list[dict]:
                                     "redacted": redacted,
                                     "snippet": line.strip()[:80],
                                 })
-            except Exception as exc:
+            except (OSError, UnicodeDecodeError) as exc:
                 print(f"Warning: could not read {filepath}: {exc}", file=sys.stderr)
     return findings
 
@@ -105,7 +105,7 @@ def scan_git_history() -> list[dict]:
                             "redacted": redacted,
                             "snippet": added_line.strip()[:80],
                         })
-    except Exception as exc:
+    except (OSError, subprocess.SubprocessError) as exc:
         print(f"Warning scanning git history: {exc}", file=sys.stderr)
     return findings
 
