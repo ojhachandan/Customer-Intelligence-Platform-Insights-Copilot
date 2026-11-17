@@ -1,0 +1,70 @@
+{
+  "dataset_id": "uci_online_retail_ii_v1",
+  "dataset_name": "UCI Online Retail II",
+  "publisher": "UCI Machine Learning Repository",
+  "creator": "Daqing Chen",
+  "doi": "10.24432/C5CG6D",
+  "license": "CC BY 4.0",
+  "source_url": "https://archive.ics.uci.edu/dataset/502/online+retail+ii",
+  "download_url": "https://archive.ics.uci.edu/static/public/502/online+retail+ii.zip",
+  "original_filename": "online_retail_II.xlsx",
+  "file_size_bytes": 45622278,
+  "sha256_checksum": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+  "historical_coverage": "2009-12-01 to 2011-12-09",
+  "currency": "GBP",
+  "expected_source_records": 1067371,
+  "actual_source_records": 1067371,
+  "worksheets": [
+    {
+      "sheet_name": "Year 2009-2010",
+      "header_columns": [
+        "Invoice",
+        "StockCode",
+        "Description",
+        "Quantity",
+        "InvoiceDate",
+        "Price",
+        "Customer ID",
+        "Country"
+      ],
+      "record_count": 525461,
+      "sample_row": [
+        "489434",
+        "85048",
+        "15CM CHRISTMAS GLASS BALL 20 LIGHTS",
+        "12",
+        "2009-12-01 07:45:00",
+        "6.95",
+        "13085",
+        "United Kingdom"
+      ]
+    },
+    {
+      "sheet_name": "Year 2010-2011",
+      "header_columns": [
+        "Invoice",
+        "StockCode",
+        "Description",
+        "Quantity",
+        "InvoiceDate",
+        "Price",
+        "Customer ID",
+        "Country"
+      ],
+      "record_count": 541910,
+      "sample_row": [
+        "536365",
+        "85123A",
+        "WHITE HANGING HEART T-LIGHT HOLDER",
+        "6",
+        "2010-12-01 08:26:00",
+        "2.55",
+        "17850",
+        "United Kingdom"
+      ]
+    }
+  ],
+  "parser_version": "openpyxl-streaming-v1",
+  "pipeline_version": "v1.0",
+  "generated_at": "2026-11-03T17:18:30.079428+00:00"
+}

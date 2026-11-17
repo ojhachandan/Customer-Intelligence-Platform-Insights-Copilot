@@ -1,3 +1,4 @@
+import cip.recommendations as recommendation_module
 from cip.analytics_tools import run_segment_query
 from cip.copilot import CopilotService, ModelAdapter
 from cip.features import refresh_features
@@ -6,7 +7,6 @@ from cip.modeling import train_segments
 from cip.recommendations import build_recommendations, get_customer_recommendations
 from cip.schemas import SegmentQueryFilters
 from cip.vector_store import semantic_profile_search
-import cip.recommendations as recommendation_module
 
 
 class QueryAdapter(ModelAdapter):

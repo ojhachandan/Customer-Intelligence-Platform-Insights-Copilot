@@ -1,17 +1,80 @@
+# Environment and secrets
 .env
+.env.*
+!.env.example
+
+# Python environments and caches
 .venv/
 venv/
+env/
+ENV/
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 .pytest_cache/
-.mypy_cache/
 .ruff_cache/
-.coverage
-htmlcov/
+.mypy_cache/
+
+# Databases
 *.db
 *.sqlite
 *.sqlite3
-.DS_Store
+*.dump
+*.sql.gz
+
+# Datasets
+data/raw/
+data/processed/
+data/rejected/
+data/quality_reports/*.csv
+*.xlsx
+*.xls
+*.zip
+
+# MLflow and generated models
+mlruns/
+artifacts/
+models/generated/
+*.pkl
+*.joblib
+*.pt
+*.pth
+*.onnx
+
+# Vector and cache storage
+qdrant_storage/
+vector_storage/
+redis_data/
+
+# Node & Frontend (preserve frontend source, ignore build artifacts)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Logs and diagnostics
+*.log
+scratch/
 compose-check.txt
-cd.accidental
-git.accidental
+
+# Local configuration
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

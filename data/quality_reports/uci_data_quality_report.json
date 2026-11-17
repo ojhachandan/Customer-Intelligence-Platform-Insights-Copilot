@@ -1,0 +1,31 @@
+{
+  "batch_id": "batch_20261103_172229",
+  "dataset_id": "uci_online_retail_ii_v1",
+  "raw_total": 1067371,
+  "accepted_total": 1067371,
+  "rejected_total": 0,
+  "rejection_reasons": {},
+  "transaction_types": {
+    "SALE": 1036871,
+    "NON_PRODUCT_CHARGE": 4975,
+    "CANCELLATION": 19494,
+    "ZERO_VALUE_ITEM": 6026,
+    "PRICE_ADJUSTMENT": 5
+  },
+  "missing_customers": 243007,
+  "missing_descriptions": 4382,
+  "cancellations": 19494,
+  "returns": 0,
+  "zero_prices": 6026,
+  "negative_prices": 5,
+  "non_products": 4975,
+  "exact_duplicates": 0,
+  "distinct_invoices": 53628,
+  "distinct_customers": 5942,
+  "distinct_products": 5304,
+  "distinct_countries": 43,
+  "earliest_timestamp": "2009-12-01T07:45:00+00:00",
+  "latest_timestamp": "2011-12-09T12:50:00+00:00",
+  "elapsed_seconds": 400.15,
+  "rows_per_second": 2667.4
+}

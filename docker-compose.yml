@@ -2,25 +2,31 @@ services:
   api:
     build: .
     environment:
-      CIP_DATABASE_URL: postgresql+psycopg://cip:cip@postgres:5432/cip
+      CIP_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       CIP_REDIS_URL: redis://redis:6379/0
       CIP_QDRANT_URL: http://qdrant:6333
       CIP_MLFLOW_TRACKING_URI: http://mlflow:5000
       CIP_OLLAMA_BASE_URL: http://ollama:11434
+      CIP_OLLAMA_MODEL: ${CIP_OLLAMA_MODEL:-llama3.2:3b}
+      CIP_OPENAI_COMPATIBLE_BASE_URL: ${CIP_OPENAI_COMPATIBLE_BASE_URL:-}
+      CIP_OPENAI_COMPATIBLE_API_KEY: ${CIP_OPENAI_COMPATIBLE_API_KEY:-}
     ports: ["8000:8000"]
     depends_on: [postgres, redis, qdrant, mlflow]
   scheduler:
     build: .
     command: ["/app/scripts/schedule.sh"]
     environment:
-      CIP_DATABASE_URL: postgresql+psycopg://cip:cip@postgres:5432/cip
+      CIP_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       CIP_REDIS_URL: redis://redis:6379/0
       CIP_QDRANT_URL: http://qdrant:6333
       CIP_MLFLOW_TRACKING_URI: http://mlflow:5000
     depends_on: [postgres, redis, qdrant]
   postgres:
     image: postgres:16-alpine
-    environment: { POSTGRES_DB: cip, POSTGRES_USER: cip, POSTGRES_PASSWORD: cip }
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports: ["5432:5432"]
     volumes: ["postgres_data:/var/lib/postgresql/data"]
   redis:
@@ -42,4 +48,3 @@ volumes:
   postgres_data:
   qdrant_data:
   ollama_data:
-

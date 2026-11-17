@@ -1,4 +1,8 @@
+import math
+import os
 from functools import lru_cache
+
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -15,9 +19,16 @@ class Settings(BaseSettings):
     feature_version: str = "rfm-behavior-affinity-v1"
     recommendation_version: str = "hybrid-v1"
     top_k: int = 10
+    usd_to_inr: float = float(os.getenv("USD_TO_INR", "94.68"))
+
+    @field_validator("usd_to_inr")
+    @classmethod
+    def validate_rate(cls, v: float) -> float:
+        if not math.isfinite(v) or v <= 0:
+            raise ValueError(f"USD_TO_INR rate must be a finite positive number, got: {v}")
+        return v
 
 
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-

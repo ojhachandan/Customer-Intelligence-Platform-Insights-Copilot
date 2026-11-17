@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 import hashlib
 from pathlib import Path
+
 import pandas as pd
 import pandera.pandas as pa
-from sqlalchemy import select
 from sqlalchemy.orm import Session
-from cip.models import OrderLine
 
+from cip.models import OrderLine
 
 ORDER_SCHEMA = pa.DataFrameSchema(
     {
@@ -32,19 +33,33 @@ def load_orders(session: Session, csv_path: str | Path) -> dict[str, int]:
     for _, row in validated.iterrows():
         stable = "|".join(str(row[c]) for c in validated.columns)
         keys.append(hashlib.sha256(stable.encode()).hexdigest())
-    existing = set(session.scalars(select(OrderLine.source_row_key).where(OrderLine.source_row_key.in_(keys))))
-    inserted = 0
+    records = []
+    seen: set[str] = set()
     for key, (_, row) in zip(keys, validated.iterrows(), strict=True):
-        if key in existing:
+        if key in seen:
             continue
-        session.add(OrderLine(
-            source_row_key=key,
-            order_id=str(row.order_id), customer_id=str(row.customer_id),
-            product_id=str(row.product_id), category=str(row.category),
-            quantity=int(row.quantity), unit_price=float(row.unit_price),
-            ordered_at=row.ordered_at.to_pydatetime(),
-        ))
-        existing.add(key)
-        inserted += 1
+        seen.add(key)
+        records.append({
+            "source_row_key": key,
+            "order_id": str(row.order_id),
+            "customer_id": str(row.customer_id),
+            "product_id": str(row.product_id),
+            "category": str(row.category),
+            "quantity": int(row.quantity),
+            "unit_price": float(row.unit_price),
+            "ordered_at": row.ordered_at.to_pydatetime(),
+        })
+    dialect = session.bind.dialect.name if session.bind else ""
+    if dialect == "postgresql":
+        from sqlalchemy.dialects.postgresql import insert
+    elif dialect == "sqlite":
+        from sqlalchemy.dialects.sqlite import insert
+    else:
+        from sqlalchemy import insert
+    statement = insert(OrderLine).values(records)
+    if hasattr(statement, "on_conflict_do_nothing"):
+        statement = statement.on_conflict_do_nothing(index_elements=["source_row_key"])
+    result = session.execute(statement)
     session.commit()
+    inserted = max(result.rowcount or 0, 0)
     return {"read": len(validated), "inserted": inserted, "skipped": len(validated) - inserted}
