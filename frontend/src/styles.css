@@ -1,0 +1,243 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root,
+  .light {
+    --bg-page: #FAF9F5;
+    --bg-surface: #FFFFFF;
+    --bg-subtle: #F0EEE6;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #FDFCFA;
+    --border-subtle: #E8E6DC;
+    --border-hover: #D5D2C5;
+    --text-primary: #141413;
+    --text-secondary: #5E5D59;
+    --text-muted: #87867F;
+
+    /* Warm inset tile tokens */
+    --surface-inset: #F0EEE6;
+    --surface-inset-hover: #E8E6DC;
+    --border-inset: #E8E6DC;
+
+    /* Bucket A: Brand accent -> Teal (Light theme) */
+    --accent: #0F766E;
+    --accent-hover: #115E59;
+    --accent-pressed: #0D655E;
+    --accent-strong: #0F766E;
+    --accent-strong-hover: #115E59;
+    --accent-strong-pressed: #0D655E;
+    --accent-soft: rgba(15, 118, 110, 0.10);
+    --accent-border: rgba(15, 118, 110, 0.30);
+    --accent-glow: rgba(15, 118, 110, 0.16);
+    --on-accent: #FFFFFF;
+
+    /* Bucket B: Success -> Lime (Light theme) */
+    --status-success: #4D7C0F;
+    --success: #4D7C0F;
+    --success-soft: rgba(77, 124, 15, 0.10);
+    --success-border: rgba(77, 124, 15, 0.30);
+
+    /* Bucket D: Preserved semantic tokens */
+    --status-warning: #D4A24C;
+    --status-error: #C4554D;
+    --status-info: #5B7FA6;
+
+    /* Bucket C: Chart palette */
+    --chart-1: #0F766E;
+    --chart-2: #4F6BD8;
+    --chart-3: #4D7C0F;
+    --chart-4: #D4A24C;
+    --chart-5: #F472B6;
+    --chart-6: #A78BFA;
+  }
+
+  .dark {
+    --bg-page: #1F1E1D;
+    --bg-surface: #262624;
+    --bg-subtle: #30302E;
+    --bg-card: #262624;
+    --bg-card-hover: #2C2C29;
+    --border-subtle: #3A3A37;
+    --border-hover: #4A4A46;
+    --text-primary: #FAF9F5;
+    --text-secondary: #C2C0B6;
+    --text-muted: #87867F;
+
+    /* Warm charcoal inset tile tokens */
+    --surface-inset: #1C1B1A;
+    --surface-inset-hover: #222120;
+    --border-inset: rgba(250, 249, 245, 0.07);
+
+    /* Bucket A: Brand accent -> Teal (Dark theme) */
+    --accent: #2DD4BF;
+    --accent-hover: #5EEAD4;
+    --accent-pressed: #14B8A6;
+    --accent-strong: #2DD4BF;
+    --accent-strong-hover: #5EEAD4;
+    --accent-strong-pressed: #14B8A6;
+    --accent-soft: rgba(45, 212, 191, 0.14);
+    --accent-border: rgba(45, 212, 191, 0.35);
+    --accent-glow: rgba(45, 212, 191, 0.18);
+    --on-accent: #12141C;
+
+    /* Bucket B: Success -> Lime (Dark theme) */
+    --status-success: #84CC16;
+    --success: #84CC16;
+    --success-soft: rgba(132, 204, 22, 0.14);
+    --success-border: rgba(132, 204, 22, 0.35);
+
+    /* Bucket D: Preserved semantic tokens */
+    --status-warning: #DEAC53;
+    --status-error: #D26159;
+    --status-info: #6B91BB;
+
+    /* Bucket C: Chart palette */
+    --chart-1: #2DD4BF;
+    --chart-2: #7392EF;
+    --chart-3: #84CC16;
+    --chart-4: #D4A24C;
+    --chart-5: #F472B6;
+    --chart-6: #A78BFA;
+  }
+
+  body {
+    @apply m-0 font-sans antialiased selection:bg-[var(--accent-soft)] selection:text-[var(--accent)];
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+    min-height: 100vh;
+  }
+
+  button, input, textarea, select {
+    font: inherit;
+  }
+
+  *:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px var(--accent);
+  }
+
+  /* Teal-aware custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-subtle);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-hover);
+  }
+}
+
+@layer components {
+  .card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    border-radius: 18px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+    transition: all 200ms ease;
+  }
+  .card-interactive {
+    @apply card hover:-translate-y-0.5 hover:border-[var(--border-hover)] hover:shadow-soft active:scale-[0.99];
+  }
+  .card-subtle {
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px;
+  }
+  .tile-inset {
+    background-color: var(--surface-inset);
+    border: 1px solid var(--border-inset);
+    border-radius: 12px;
+  }
+  .tile-inset-interactive {
+    @apply tile-inset transition-colors duration-150 hover:bg-[var(--surface-inset-hover)];
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-[12px] px-3.5 py-2 text-sm font-medium transition-all duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn shadow-sm;
+    background-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .btn-primary:hover {
+    background-color: var(--accent-hover);
+    box-shadow: 0 0 20px -3px var(--accent-glow);
+  }
+  .btn-primary:active {
+    background-color: var(--accent-pressed);
+  }
+  .btn-secondary {
+    @apply btn border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] hover:border-[var(--border-hover)];
+  }
+  .btn-ghost {
+    @apply btn text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] hover:text-[var(--text-primary)];
+  }
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)];
+  }
+  .input {
+    @apply rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3.5 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] transition-all duration-150;
+  }
+  .input:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  .heading-serif {
+    font-family: Newsreader, Lora, Source Serif 4, Georgia, serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Recharts tooltip and cursor safeguards */
+.recharts-tooltip-cursor {
+  fill: rgba(250, 249, 245, 0.05);
+}
+.recharts-default-tooltip {
+  color: #FAF9F5 !important;
+  background-color: #2A2A28 !important;
+  border: 1px solid #3A3A37 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-subtle) 25%,
+    var(--border-subtle) 37%,
+    var(--bg-subtle) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

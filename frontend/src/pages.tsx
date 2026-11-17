@@ -1,0 +1,9 @@
+export { default as DashboardPage } from "./pages/DashboardPage";
+export { default as CustomerPage } from "./pages/CustomerPage";
+export { default as SegmentsPage } from "./pages/SegmentsPage";
+export { default as RecommendationsPage } from "./pages/RecommendationsPage";
+export { default as AnalyticsPage } from "./pages/AnalyticsPage";
+export { default as CopilotPage } from "./pages/CopilotPage";
+export { default as AuditPage } from "./pages/AuditPage";
+export { default as MonitoringPage } from "./pages/MonitoringPage";
+export { default as DataPage } from "./pages/DataPage";
